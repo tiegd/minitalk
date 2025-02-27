@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gaducurt <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/02 16:42:06 by gaducurt          #+#    #+#             */
-/*   Updated: 2024/12/02 16:42:09 by gaducurt         ###   ########.fr       */
+/*   Created: 2024/11/25 14:37:54 by gaducurt          #+#    #+#             */
+/*   Updated: 2024/11/25 14:37:56 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-size_t	ft_strlen(const char *s)
+void	ft_lstclear(t_list **lst, void (*del)(void*))
 {
-	size_t	i;
+	t_list	*buffer;
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
+	if (!del)
+		return ;
+	if (lst)
+	{
+		while (*lst)
+		{
+			buffer = (*lst)->next;
+			del((*lst)->content);
+			free(*lst);
+			*lst = buffer;
+		}
+	}
 }
