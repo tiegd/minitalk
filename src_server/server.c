@@ -6,22 +6,27 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:33 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/02/27 16:29:01 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:25:23 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-char	ft_convert()
+char	*str;
+
+char	ft_btoi()
 {
 	
 }
 
 void    handle_signal(int signal, siginfo_t *info, void *context)
 {
+	static size_t	bin;
+	int				nb;
+
     (void)info;
 	(void)context;
-    ft_printf("%d", signal);
+    ft_printf("%s", str);
 }
 
 int main()
