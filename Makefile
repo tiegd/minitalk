@@ -6,7 +6,7 @@
 #    By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/25 11:38:47 by gaducurt          #+#    #+#              #
-#    Updated: 2025/02/27 15:03:32 by gaducurt         ###   ########.fr        #
+#    Updated: 2025/03/03 13:05:49 by gaducurt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,8 +47,8 @@ libft:
 $(NAME_SERV): $(OBJ_SERV) $(LIBS)
 	$(CC) $(CFLAGS) -o $(NAME_SERV) $(OBJ_SERV) $(LIBS)
 
-$(NAME_CLT): $(OBJ_CLT)
-	$(CC) $(CFLAGS) -o $(NAME_CLT) $(OBJ_CLT)
+$(NAME_CLT): $(OBJ_CLT) $(LIBS)
+	$(CC) $(CFLAGS) -o $(NAME_CLT) $(OBJ_CLT) $(LIBS)
 
 $(BIN)%.o: $(DIR_SERV)%.c | $(BIN)
 	$(CC) $(CFLAGS) -c $< -o $@
