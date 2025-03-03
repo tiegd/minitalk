@@ -6,13 +6,33 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:21 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/02/27 16:31:53 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/03 11:32:07 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	send_msg(int pid, char *msg)
+static void	ft_send_size(int pid, int size)
+{
+	size_t	i;
+
+	i = 0;
+	while (i <= 32)
+	{
+		if ((size >> (31 - i) & 1) == 0)
+		{
+			if (kill(pid, SIGUSR1) == -1)
+				exit(EXIT_FAILURE);
+		}
+		else if ((size >> (31 - i) & 1) == 1)
+		{
+			if (kill(pid, SIGUSR2) == -1)
+				exit(EXIT_FAILURE);
+		}
+	}
+}
+
+static void	ft_send_msg(int pid, char *msg)
 {
 	int	i;
 	int	j;
@@ -24,9 +44,15 @@ void	send_msg(int pid, char *msg)
 		while (j++ <= 8)
 		{
 			if ((msg[i] >> (7 - j) & 1) == 0)
-				kill(pid, SIGUSR1);
+			{
+				if (kill(pid, SIGUSR1) == -1)
+					exit(EXIT_FAILURE);
+			}
 			else if ((msg[i] >> (7 - j) & 1) == 1)
-				kill(pid, SIGUSR2);
+			{
+				if (kill(pid, SIGUSR2) == -1)
+					exit(EXIT_FAILURE);
+			}
 		}
 		i++;
 	}
@@ -57,7 +83,8 @@ int	main(int ac, char **av)
 		msg = av[2];
 		ft_printf("%d\n", pid);
 		ft_printf("%s", msg);
-		send_msg(pid, msg);
+		ft_send_size(pid, ft_strlen(av[2]));
+		ft_send_msg(pid, msg);
 	}
 	else
 		return (0);
