@@ -6,7 +6,7 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:25 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/02/27 14:14:26 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:08:16 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,7 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <sys/types.h>
+
+// volatile sig_atomic_t	recived = 1;
 
 #endif
