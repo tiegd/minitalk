@@ -18,7 +18,6 @@ void	handle_recived(int signal, siginfo_t *info, void *context)
 {
 	(void) info;
 	(void) context;
-	// (void)signal;
 	if (signal == SIGUSR1)
 		recived = 0;
 }
@@ -41,13 +40,8 @@ static void	ft_send_size(int pid, int size)
 				exit(EXIT_FAILURE);
 		}
 		while (recived)
-		{
-			ft_printf("boucle pause size\n");
 			pause();
-		}
 		recived = 1;
-		ft_printf("sortie de boucle pause size\n");
-	// usleep(15000);
 		i--;
 	}
 }
@@ -74,21 +68,25 @@ static void	ft_send_msg(int pid, char *msg)
 					exit(EXIT_FAILURE);
 			}
 			while (recived)
-			{
-				ft_printf("boucle pause msg\n");
 				pause();
-			}
 			recived = 1;
-			ft_printf("sortie de boucle pause msg\n");
-			usleep(15000);
 		}
 		i++;
 	}
+	
+}
+
+static void	ft_send_zero(int pid)
+{
+	int	j;
+
 	j = 0;
-	while (j++ < 8)
+	while (j++ < 7)
 	{
 		kill(pid, SIGUSR1);
-		usleep(15000);
+		while (recived)
+				pause();
+		recived = 1;
 	}
 }
 
@@ -108,6 +106,7 @@ int	main(int ac, char **av)
 		msg = av[2];
 		ft_send_size(pid, ft_strlen(av[2]));
 		ft_send_msg(pid, msg);
+		ft_send_zero(pid);
 	}
 	else
 		return (0);
