@@ -60,18 +60,18 @@ void    handle_signal(int signal, siginfo_t *info, void *context)
 	if (count_size == 32)
 	{
 		str = ft_calloc((size + 1), sizeof(char));
-		count_size++;
 		// ft_printf("\n\ncalloc\n\n");
+		if (!str)
+			return ;
+		count_size++;
 	}
-	if (!str)
-		return ;
-	if (count_bit++ <= 7)
+	if (count_size > 32 && count_bit++ <= 7)
 	{
 		nb = ft_btoi(nb, signal);
 		// ft_printf("nb = %d\n", nb);
 	}
-	// ft_printf("count_bit = %d\n", count_bit);
-	if (count_bit == 8 && nb != 0)
+	ft_printf("count_bit = %d\n", count_bit);
+	if (count_size > 32 && count_bit == 8 && nb != 0)
 	{
 		ft_fill_str(nb);
 		// ft_printf("\n\nrentre dans la boucle \n\n");
@@ -79,17 +79,17 @@ void    handle_signal(int signal, siginfo_t *info, void *context)
 		count_bit = 0;
 		nb = 0;
 	}
-	else if (nb == 0 && count_bit == 8)
+	else if (count_size > 32 && nb == 0 && count_bit == 8)
 	{
-	    ft_printf("%s\n", str);
+		ft_printf("%s\n", str);
 		free(str);
 		count_size = 0;
 		size = 0;
 		count_bit = 0;
 		nb = 0;
-		
 	}
-	ft_printf("info->si_pid = %d", info->si_pid);
+	// ft_printf("1 : info->si_pid = %d\n", info->si_pid);
+	usleep(100);
 	kill(info->si_pid, SIGUSR1);
 	// ft_printf("str = %s\n\n", str);
 }
@@ -104,8 +104,6 @@ int main()
 	action.sa_sigaction = handle_signal;
 	sigaction(SIGUSR1, &action, NULL);
 	sigaction(SIGUSR2, &action, NULL);
-	// signal(SIGUSR1, &handle_signal);
-	// signal(SIGUSR2, &handle_signal);
 	ft_printf("%d\n", getpid());
 	while (1)
 	{

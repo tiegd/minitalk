@@ -14,10 +14,13 @@
 
 volatile sig_atomic_t	recived = 1;
 
-void	handle_recived(int signal)
+void	handle_recived(int signal, siginfo_t *info, void *context)
 {
-	(void)signal;
-	recived = 0;
+	(void) info;
+	(void) context;
+	// (void)signal;
+	if (signal == SIGUSR1)
+		recived = 0;
 }
 
 static void	ft_send_size(int pid, int size)
@@ -39,11 +42,11 @@ static void	ft_send_size(int pid, int size)
 		}
 		while (recived)
 		{
-			ft_printf("boucle pause\n");
+			ft_printf("boucle pause size\n");
 			pause();
 		}
-		ft_printf("sortie de boucle pause\n");
 		recived = 1;
+		ft_printf("sortie de boucle pause size\n");
 	// usleep(15000);
 		i--;
 	}
@@ -70,15 +73,15 @@ static void	ft_send_msg(int pid, char *msg)
 				if (kill(pid, SIGUSR2) == -1)
 					exit(EXIT_FAILURE);
 			}
+			while (recived)
+			{
+				ft_printf("boucle pause msg\n");
+				pause();
+			}
+			recived = 1;
+			ft_printf("sortie de boucle pause msg\n");
 			usleep(15000);
 		}
-		while (recived)
-		{
-			ft_printf("boucle pause\n");
-			pause();
-		}
-		ft_printf("sortie de boucle pause\n");
-		recived = 1;
 		i++;
 	}
 	j = 0;
@@ -89,26 +92,16 @@ static void	ft_send_msg(int pid, char *msg)
 	}
 }
 
-// void	handle_signal(int signal)
-// {
-// 	(void)signal;
-// 	ft_printf("signal");
-// }
-
 int	main(int ac, char **av)
 {
 	int					pid;
 	char				*msg;
-	// struct sigaction	action;
+	struct sigaction	action;
 
-	// action.sa_handler = handle_recived;
-	// action.sa_sigaction = handle_recived;
-	// sigemptyset(&action.sa_mask);
-	// action.sa_flags = SA_RESTART;
-	// sigaction(SIGUSR1, &action, NULL);
-	// sigaction(SIGUSR2, &action, NULL);
-	signal(SIGUSR1, &handle_recived);
-	// signal(SIGUSR2, &handle_recived);
+	action.sa_flags = SA_SIGINFO;
+	action.sa_sigaction = handle_recived;
+	sigemptyset(&action.sa_mask);
+	sigaction(SIGUSR1, &action, NULL);
 	if (ac == 3)
 	{
 		pid = ft_atoi(av[1]);
