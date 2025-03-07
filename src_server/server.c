@@ -36,8 +36,6 @@ static int	ft_btoi(int nb, int signal)
 		nb = (nb << 1) | 0;
 	if (signal == SIGUSR2)
 		nb = (nb << 1) | 1;
-	// ft_printf("nb dans ft_btoi = %d\n\n", nb);
-	// ft_printf("\n");
 	return (nb);
 }
 
@@ -50,55 +48,51 @@ void    handle_signal(int signal, siginfo_t *info, void *context)
 
     (void)info;
 	(void)context;
-	// ft_printf("signal serv = %d\n", signal);
-	// gettimeofday(&start, NULL);
-	
 	if (count_size <= 31)
 	{
 		size = ft_btoi(size, signal);
-		// ft_printf("size = %d\n", size);
-		// ft_printf("count_size = %d\n", count_size);
 		count_size++;
+		ft_printf("count_size = %d\n", count_size);
 	}
 	if (count_size == 32)
 	{
 		str = ft_calloc((size + 1), sizeof(char));
 		if (!str)
 			return ;
+		ft_printf("size = %d\n\n", size);
 		count_size++;
 	}
 	if (count_size > 32 && count_bit++ <= 7)
 		nb = ft_btoi(nb, signal);
-	// ft_printf("count_bit = %d\n", count_bit);
+	ft_printf("count_bit = %d\n", count_bit);
+	ft_printf("singal = %d\n", signal);
+	ft_printf("nb = %d\n", nb);
 	if (count_size > 32 && count_bit == 8 && nb != 0)
 	{
+		ft_printf("char = %c, char = %d\n", nb, nb);
 		ft_fill_str(nb);
 		count_bit = 0;
 		nb = 0;
+		ft_printf("str = %s\n\n", str);
 	}
 	else if (count_size > 32 && nb == 0 && count_bit == 8)
 	{
 		ft_printf("%s\n", str);
 		free(str);
-		kill(info->si_pid, 19);
-		kill(getpid(), 19);
 		count_size = 0;
 		size = 0;
 		count_bit = 0;
 		nb = 0;
 	}
-	usleep(100);
+	usleep(1000);
 	kill(info->si_pid, SIGUSR1);
 }
 
 int main()
 {
 	struct sigaction	action;
-	// struct timeval		start, end;
 	
-	// gettimeofday(&start, NULL);
 	sigemptyset(&action.sa_mask);
-	// action.sa_flags = SA_SIGINFO | SA_NODEFER;
 	action.sa_flags = SA_SIGINFO;
 	action.sa_sigaction = handle_signal;
 	sigaction(SIGUSR1, &action, NULL);
@@ -106,10 +100,7 @@ int main()
 	ft_printf("%d\n", getpid());
 	while (1)
 	{
-		pause();
-		// continue;
+		// pause();
+		continue ;
 	}
-	// gettimeofday(&end, NULL);
-	// long elapsed_time = (end.tv_sec - start.tv_sec) * 1000000L + (end.tv_usec - start.tv_usec);
-	// ft_printf("Temps d'exécution: %ld microsecondes\n", elapsed_time);
 }
