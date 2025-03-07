@@ -43,7 +43,6 @@ static int	ft_btoi(int nb, int signal)
 
 void    handle_signal(int signal, siginfo_t *info, void *context)
 {
-	struct 			timeval start, end;
 	static int		nb = 0;
 	static int		count_size = 0;
 	static int		count_bit = 0;
@@ -52,7 +51,7 @@ void    handle_signal(int signal, siginfo_t *info, void *context)
     (void)info;
 	(void)context;
 	// ft_printf("signal serv = %d\n", signal);
-	gettimeofday(&start, NULL);
+	// gettimeofday(&start, NULL);
 	
 	if (count_size <= 31)
 	{
@@ -79,11 +78,10 @@ void    handle_signal(int signal, siginfo_t *info, void *context)
 	}
 	else if (count_size > 32 && nb == 0 && count_bit == 8)
 	{
-		gettimeofday(&end, NULL);
-		long elapsed_time = (end.tv_sec - start.tv_sec) * 1000000L + (end.tv_usec - start.tv_usec);
-    	ft_printf("Temps d'exécution: %ld microsecondes\n", elapsed_time);
 		ft_printf("%s\n", str);
 		free(str);
+		kill(info->si_pid, 19);
+		kill(getpid(), 19);
 		count_size = 0;
 		size = 0;
 		count_bit = 0;
@@ -95,8 +93,10 @@ void    handle_signal(int signal, siginfo_t *info, void *context)
 
 int main()
 {
-	struct sigaction    action;
-
+	struct sigaction	action;
+	// struct timeval		start, end;
+	
+	// gettimeofday(&start, NULL);
 	sigemptyset(&action.sa_mask);
 	// action.sa_flags = SA_SIGINFO | SA_NODEFER;
 	action.sa_flags = SA_SIGINFO;
@@ -109,4 +109,7 @@ int main()
 		pause();
 		// continue;
 	}
+	// gettimeofday(&end, NULL);
+	// long elapsed_time = (end.tv_sec - start.tv_sec) * 1000000L + (end.tv_usec - start.tv_usec);
+	// ft_printf("Temps d'exécution: %ld microsecondes\n", elapsed_time);
 }
