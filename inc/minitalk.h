@@ -6,7 +6,7 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:25 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/03/05 17:08:16 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:22:52 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@
 # include <signal.h>
 # include <sys/types.h>
 
-// volatile sig_atomic_t	recived = 1;
+typedef struct s_signal_data
+{
+	int	nb;
+	int	count_size;
+	int	count_bit;
+	int	size;
+}	t_signal_data;
 
 #endif

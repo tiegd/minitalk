@@ -6,7 +6,7 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:33 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/03/17 13:26:55 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:21:57 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,51 +39,48 @@ static int	ft_btoi(int nb, int signal)
 	return (nb);
 }
 
-void    handle_signal(int signal, siginfo_t *info, void *context)
+static t_signal_data	ft_data(t_signal_data data, int signal)
 {
-	static int		nb = 0;
-	static int		count_size = 0;
-	static int		count_bit = 0;
-	static int		size = 0;
+	if (data.count_size == 33)
+		data.count_size++;
+	else
+		data.nb = ft_btoi(data.nb, signal);
+	return (data);
+}
+
+void	handle_signal(int signal, siginfo_t *info, void *context)
+{
+	static t_signal_data	data = {0, 0, 0, 0};
 
 	(void)context;
-	if (count_size++ <= 31)
-		size = ft_btoi(size, signal);
-	if (count_size == 32)
+	if (data.count_size++ <= 31)
+		data.size = ft_btoi(data.size, signal);
+	if (data.count_size == 32)
 	{
-		g_str = ft_calloc((size + 1), sizeof(char));
-		count_size++;
+		g_str = ft_calloc((data.size + 1), sizeof(char));
+		data.count_size++;
 	}
-	if (count_size > 32 && count_bit++ <= 7)
+	if (data.count_size > 32 && data.count_bit++ <= 7)
+		data = ft_data(data, signal);
+	if (data.count_size > 32 && data.count_bit == 8 && data.nb != 0)
 	{
-		if (count_size == 33)
-			count_size++;
-		else
-			nb = ft_btoi(nb, signal);
+		ft_fill_str(data.nb);
+		data = (t_signal_data){0, data.count_size, 0, data.size};
 	}
-	if (count_size > 32 && count_bit == 8 && nb != 0)
-	{
-		ft_fill_str(nb);
-		count_bit = 0;
-		nb = 0;
-	}
-	else if (count_size > 32 && nb == 0 && count_bit == 8)
+	else if (data.count_size > 32 && data.nb == 0 && data.count_bit == 8)
 	{
 		ft_printf("%s\n", g_str);
 		free(g_str);
-		count_size = 0;
-		size = 0;
-		count_bit = 0;
-		nb = 0;
+		data = (t_signal_data){0, 0, 0, 0};
 	}
 	usleep(100);
 	kill(info->si_pid, SIGUSR1);
 }
 
-int main()
+int	main(void)
 {
 	struct sigaction	action;
-	
+
 	sigemptyset(&action.sa_mask);
 	action.sa_flags = SA_SIGINFO;
 	action.sa_sigaction = handle_signal;
