@@ -6,20 +6,20 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:21 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/03/05 17:58:56 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/17 13:28:01 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-volatile sig_atomic_t	recived = 1;
+volatile sig_atomic_t	g_recived = 1;
 
 void	handle_recived(int signal, siginfo_t *info, void *context)
 {
 	(void) info;
 	(void) context;
 	if (signal == SIGUSR1)
-		recived = 0;
+		g_recived = 0;
 }
 
 static void	ft_send_size(int pid, int size)
@@ -39,9 +39,9 @@ static void	ft_send_size(int pid, int size)
 			if (kill(pid, SIGUSR2) == -1)
 				exit(EXIT_FAILURE);
 		}
-		while (recived)
+		while (g_recived)
 			pause();
-		recived = 1;
+		g_recived = 1;
 		i--;
 	}
 }
@@ -67,13 +67,12 @@ static void	ft_send_msg(int pid, char *msg)
 				if (kill(pid, SIGUSR2) == -1)
 					exit(EXIT_FAILURE);
 			}
-			while (recived)
+			while (g_recived)
 				pause();
-			recived = 1;
+			g_recived = 1;
 		}
 		i++;
 	}
-	
 }
 
 static void	ft_send_zero(int pid)
@@ -84,9 +83,9 @@ static void	ft_send_zero(int pid)
 	while (j++ < 7)
 	{
 		kill(pid, SIGUSR1);
-		while (recived)
-				pause();
-		recived = 1;
+		while (g_recived)
+			pause();
+		g_recived = 1;
 	}
 }
 
