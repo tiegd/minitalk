@@ -6,7 +6,7 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:33 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/03/17 14:33:32 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:41:29 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ void	handle_signal(int signal, siginfo_t *info, void *context)
 		free(g_str);
 		data = (t_signal_data){0, 0, 0, 0};
 	}
-	usleep(100);
 	kill(info->si_pid, SIGUSR1);
 }
 
