@@ -6,7 +6,7 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:33 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/03/17 14:21:57 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:33:32 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	ft_btoi(int nb, int signal)
 	return (nb);
 }
 
-static t_signal_data	ft_data(t_signal_data data, int signal)
+static t_signal_data	ft_init_data(t_signal_data data, int signal)
 {
 	if (data.count_size == 33)
 		data.count_size++;
@@ -61,7 +61,7 @@ void	handle_signal(int signal, siginfo_t *info, void *context)
 		data.count_size++;
 	}
 	if (data.count_size > 32 && data.count_bit++ <= 7)
-		data = ft_data(data, signal);
+		data = ft_init_data(data, signal);
 	if (data.count_size > 32 && data.count_bit == 8 && data.nb != 0)
 	{
 		ft_fill_str(data.nb);
