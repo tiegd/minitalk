@@ -6,28 +6,28 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:33 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/03/17 15:41:29 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:15:05 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 #include <sys/time.h>
 
-char	*g_str;
+// char	*g_str;
 
-static void	ft_fill_str(int nb)
+static void	ft_fill_str(int nb, char *str)
 {
 	int	i;
 
 	i = 0;
-	if (g_str[i] == '\0')
+	if (str[i] == '\0')
 	{
-		g_str[i] = nb;
+		str[i] = nb;
 		return ;
 	}
-	while (g_str[i])
+	while (str[i])
 		i++;
-	g_str[i] = nb;
+	str[i] = nb;
 }
 
 static int	ft_btoi(int nb, int signal)
@@ -51,26 +51,27 @@ static t_signal_data	ft_init_data(t_signal_data data, int signal)
 void	handle_signal(int signal, siginfo_t *info, void *context)
 {
 	static t_signal_data	data = {0, 0, 0, 0};
+	static char				*str = NULL;
 
 	(void)context;
 	if (data.count_size++ <= 31)
 		data.size = ft_btoi(data.size, signal);
 	if (data.count_size == 32)
 	{
-		g_str = ft_calloc((data.size + 1), sizeof(char));
+		str = ft_calloc((data.size + 1), sizeof(char));
 		data.count_size++;
 	}
 	if (data.count_size > 32 && data.count_bit++ <= 7)
 		data = ft_init_data(data, signal);
 	if (data.count_size > 32 && data.count_bit == 8 && data.nb != 0)
 	{
-		ft_fill_str(data.nb);
+		ft_fill_str(data.nb, str);
 		data = (t_signal_data){0, data.count_size, 0, data.size};
 	}
 	else if (data.count_size > 32 && data.nb == 0 && data.count_bit == 8)
 	{
-		ft_printf("%s\n", g_str);
-		free(g_str);
+		ft_printf("%s\n", str);
+		free(str);
 		data = (t_signal_data){0, 0, 0, 0};
 	}
 	kill(info->si_pid, SIGUSR1);
@@ -87,5 +88,5 @@ int	main(void)
 	sigaction(SIGUSR2, &action, NULL);
 	ft_printf("%d\n", getpid());
 	while (1)
-		continue ;
+		pause();
 }
