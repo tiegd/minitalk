@@ -6,14 +6,12 @@
 /*   By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:38:33 by gaducurt          #+#    #+#             */
-/*   Updated: 2025/03/17 16:15:05 by gaducurt         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:51:08 by gaducurt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 #include <sys/time.h>
-
-// char	*g_str;
 
 static void	ft_fill_str(int nb, char *str)
 {
