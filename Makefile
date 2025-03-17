@@ -6,7 +6,7 @@
 #    By: gaducurt <gaducurt@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/25 11:38:47 by gaducurt          #+#    #+#              #
-#    Updated: 2025/03/03 13:05:49 by gaducurt         ###   ########.fr        #
+#    Updated: 2025/03/17 15:19:40 by gaducurt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +26,8 @@ DIR_SERV = src_server/
 DIR_CLT = src_client/
 
 SRC_SERV = 	server.c			\
-			server_utils.c		\
 			
 SRC_CLT =	client.c		\
-			client_utils.c	\
 
 LIBS = Libft/libft.a
 
@@ -39,10 +37,10 @@ DEPS_SERV =   $(OBJ_SERV:.o=.d)
 OBJ_CLT = $(addprefix $(BIN), $(SRC_CLT:.c=.o))
 DEPS_CLT = $(OBJ_CLT:.o=.d)
 
-all: $(BIN) libft $(NAME_SERV) $(NAME_CLT)
+all: .print_header $(BIN) libft $(NAME_SERV) $(NAME_CLT)
 
 libft:
-	$(MAKE) -C Libft
+	$(MAKE) -s -C Libft
 
 $(NAME_SERV): $(OBJ_SERV) $(LIBS)
 	$(CC) $(CFLAGS) -o $(NAME_SERV) $(OBJ_SERV) $(LIBS)
@@ -63,7 +61,7 @@ $(BIN):
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	$(MAKE) clean -C Libft
+	$(MAKE) -s clean -C Libft
 	rm -rf $(BIN) Libft/fclean
 
 fclean: clean
@@ -71,6 +69,37 @@ fclean: clean
 
 re: fclean all
 
+.print_header:
+	$(call DISPLAY_TITLE)
+
 .PHONY: all clean fclean re libft
 
 -include $(DEPS_CLT) $(DEPS_SERV)
+
+########################################################################################################################
+#                                                       COLORS                                                         #
+########################################################################################################################
+
+DEF_COLOR 	= \033[0;39m
+RED			= \033[0;91m
+ORANGE		= \033[0;33m
+YELLOW		= \033[1;93m
+GREEN		= \033[1;92m
+BLUE		= \033[0;94m
+CYAN		= \033[0;96m
+MAGENTA 	= \033[0;95m
+
+########################################################################################################################
+#                                                       DISPLAY                                                        #
+########################################################################################################################
+
+define DISPLAY_TITLE
+						@echo "$(RED)     ##   ##   ####    ##   ##   ####    ######     ##     ####     ###  ##"
+						@echo "$(ORANGE)     ### ###    ##     ###  ##    ##     # ## #    ####     ##       ##  ##"
+						@echo "$(YELLOW)     #######    ##     #### ##    ##       ##     ##  ##    ##       ## ##"
+						@echo "$(GREEN)     #######    ##     ## ####    ##       ##     ##  ##    ##       ####"
+						@echo "$(BLUE)     ## # ##    ##     ##  ###    ##       ##     ######    ##   #   ## ##"
+						@echo "$(CYAN)     ##   ##    ##     ##   ##    ##       ##     ##  ##    ##  ##   ##  ##"
+						@echo "$(MAGENTA)     ##   ##   ####    ##   ##   ####     ####    ##  ##   #######  ###  ## $(DEF_COLOR)"
+						printf "\n"
+endef
